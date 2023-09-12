@@ -2,7 +2,7 @@
 deepspeed code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
     --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
-    --refactored_base_path /root/program_refactoring/logs/refactoring \
+    --refactored_base_path /root/codescratch/apps_enumerated_old/ \
     --refactored_style base_original \
     --low_cpu_mem_usage True \
     --use_xformer_attn True \
@@ -25,7 +25,7 @@ deepspeed code_trainer.py \
     --lr_scheduler_type "cosine" \
     --logging_steps 5 \
     --block_size 2048 \
-    --report_to wandb \
+    --report_to none \
     --run_name codellama_7b_base_4e5_256_4 \
     --do_train \
     --do_eval \
