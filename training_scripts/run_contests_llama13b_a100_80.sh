@@ -1,18 +1,18 @@
 torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
     --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
-    --refactored_base_path ./apps_enumerated_old \
+    --refactored_base_path ./code_contests_enumerated_train \
     --refactored_style base_original \
     --low_cpu_mem_usage True \
     --use_xformer_attn True \
     --bf16 True \
     --tf32 True \
-    --output_dir checkpoints_codellama_apps_7b_base_4e5_256_4 \
-    --num_train_epochs 4 \
+    --output_dir checkpoints_codellama_7b_base_4e5_256_1 \
+    --num_train_epochs 1 \
     --gradient_checkpointing True \
-    --gradient_accumulation_steps 8 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 16 \
+    --gradient_accumulation_steps 32 \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 8 \
     --save_strategy "steps" \
     --save_steps 25 \
     --save_total_limit 10 \
@@ -25,7 +25,6 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --logging_steps 5 \
     --block_size 2048 \
     --report_to wandb \
-    --run_name codellama_apps_7b_base_4e5_256_4 \
     --do_train \
     --do_eval \
     --fsdp "full_shard auto_wrap" \
