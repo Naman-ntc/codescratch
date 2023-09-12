@@ -29,5 +29,5 @@ deepspeed code_trainer.py \
     --run_name codellama_7b_base_4e5_256_4 \
     --do_train \
     --do_eval \
-    --deepspeed ds_config.json \
+    --deepspeed utils/ds_config.json \
     # --final_style modularize_original \
