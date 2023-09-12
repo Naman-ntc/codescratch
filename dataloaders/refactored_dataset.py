@@ -184,8 +184,8 @@ class RefactoredDataset(torch.utils.data.Dataset):
                     cutoff_count += 1
 
                 sample = [
-                    (q_str, 1),
-                    (solution, 0),
+                    (q_str_tokens, 1),
+                    (solution_str_tokens, 0),
                 ]
                 all_token_lengths["question"].append(q_tokens_count)
                 all_token_lengths["solution"].append(solution_tokens_count)
@@ -253,8 +253,8 @@ class RefactoredDataset(torch.utils.data.Dataset):
                 cutoff_count += 1
 
             sample = [
-                (q_str, 1),
-                (plan_txt_str, 0),
+                (q_str_tokens, 1),
+                (plan_str_tokens, 0),
             ]
             all_token_lengths["question"].append(q_tokens_count)
             all_token_lengths["plan"].append(plan_tokens_count)
@@ -299,7 +299,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
         return input_ids, label_ids
 
     def __getitem__(self, idx):
-        input_ids, label_ids = self._pack_samples(idx)
+        input_ids, label_ids = self.pack_samples(idx)
         return {
             "input_ids": torch.LongTensor(input_ids),
             "labels": torch.LongTensor(label_ids),
@@ -317,8 +317,8 @@ if __name__ == "__main__":
     setattr(
         DataArguments,
         "refactored_base_path",
-        # "/home/naman/Repos/CodeQuality/apps_enumerated_old",
-        "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
+        "/home/naman/Repos/CodeQuality/apps_enumerated_old",
+        # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
         # /home/naman/Repos/CodeQuality//code_contests_enumerated_train/row_*/all_solutions/*/modularize/*/*/solution.py/
     )
     setattr(DataArguments, "refactored_style", "base_original")
@@ -331,4 +331,7 @@ if __name__ == "__main__":
         trust_remote_code=True,
     )
 
-    build_refactored_datasets(tokenizer, DataArguments)
+    dataset, _ = build_refactored_datasets(tokenizer, DataArguments)
+
+    print(len(dataset))
+    print(dataset[0])
