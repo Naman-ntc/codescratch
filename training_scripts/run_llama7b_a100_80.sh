@@ -8,7 +8,7 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --bf16 True \
     --tf32 True \
     --output_dir checkpoints_codellama_7b_base_4e5_256_4 \
-    --num_train_epochs 1 \
+    --num_train_epochs 4 \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 8 \
     --per_device_train_batch_size 4 \
