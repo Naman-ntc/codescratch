@@ -306,7 +306,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
         }
 
     def __len__(self):
-        return len(self.samples)
+        return len(self.all_samples)
 
 
 if __name__ == "__main__":
