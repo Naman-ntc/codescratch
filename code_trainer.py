@@ -183,3 +183,7 @@ def main():
         trainer=trainer,
         output_dir=training_args.output_dir + "/final_model"
     )
+
+
+if __name__ == "__main__":
+    main()
