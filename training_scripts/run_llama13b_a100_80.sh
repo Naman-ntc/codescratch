@@ -1,4 +1,4 @@
-torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 apps_monkeypatch_trainer.py \
+torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --model_name_or_path codellama/CodeLlama-13b-hf \
     --model_revision 3548854385251f7ea9fc2ee152aa44d3662b5faa \
     --refactored_base_path /root/program_refactoring/logs/refactoring \

@@ -19,6 +19,7 @@ from transformers import (
 
 from dataloaders import DataArguments, build_refactored_datasets
 from model_arguments import ModelArguments, ModelSpecificArguments
+from utils.monkey_patches import replace_attn_with_xformer, replace_attn_with_flash_attn
 
 
 logger = logging.getLogger(__name__)
@@ -59,7 +60,19 @@ def setup_logging(training_args: TrainingArguments):
     logger.info(f"Training/evaluation parameters {training_args}")
 
 
+def setup_monkey_patches():
+    if any(arg in sys.argv for arg in ['--use_flash_attn']):
+        print(f"Using flash attention")
+        replace_attn_with_flash_attn()
+    if any(arg in sys.argv for arg in ['--use_xformer_attn']):
+        print(f"Using xformer mem-efficient attention")
+        replace_attn_with_xformer()
+    return
+
+
 def main():
+    setup_monkey_patches()
+
     all_argument_classes = (
         ModelArguments,
         ModelSpecificArguments,
