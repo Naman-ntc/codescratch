@@ -198,6 +198,9 @@ class RefactoredDataset(torch.utils.data.Dataset):
         avg_token_lengths = {k: np.mean(v)
                              for k, v in all_token_lengths.items()}
         print(f"Average token lengths: {avg_token_lengths}")
+        stdev_token_lengths = {k: np.std(v)
+                               for k, v in all_token_lengths.items()}
+        print(f"Stdev token lengths: {stdev_token_lengths}")
         max_token_lengths = {k: np.max(v)
                              for k, v in all_token_lengths.items()}
         print(f"Max token lengths: {max_token_lengths}")
@@ -267,6 +270,9 @@ class RefactoredDataset(torch.utils.data.Dataset):
         avg_token_lengths = {k: np.mean(v)
                              for k, v in all_token_lengths.items()}
         print(f"Average token lengths: {avg_token_lengths}")
+        stdev_token_lengths = {k: np.std(v)
+                               for k, v in all_token_lengths.items()}
+        print(f"Stdev token lengths: {stdev_token_lengths}")
         max_token_lengths = {k: np.max(v)
                              for k, v in all_token_lengths.items()}
         print(f"Max token lengths: {max_token_lengths}")
@@ -319,11 +325,10 @@ if __name__ == "__main__":
         "refactored_base_path",
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
-        # /home/naman/Repos/CodeQuality//code_contests_enumerated_train/row_*/all_solutions/*/modularize/*/*/solution.py/
     )
-    setattr(DataArguments, "refactored_style", "base_original")
+    setattr(DataArguments, "refactored_style", "plan_merged1")
     setattr(DataArguments, "final_style", None)
-    setattr(DataArguments, "final_style", "modularize_original")
+    # setattr(DataArguments, "final_style", "modularize_original")
 
     tokenizer = AutoTokenizer.from_pretrained(
         "codellama/CodeLlama-7b-hf",
