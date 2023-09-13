@@ -7,7 +7,7 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --use_xformer_attn True \
     --bf16 True \
     --tf32 True \
-    --output_dir checkpoints_codellama_apps_13b_base_4e5_256_4 \
+    --output_dir checkpoints_codellama_apps_13b_base_4e5_256_2 \
     --num_train_epochs 2 \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 32 \
