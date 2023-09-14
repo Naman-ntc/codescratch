@@ -288,6 +288,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
         all_plan_samples = self.merge(
             all_plan_samples, self.data_args.plan_pad_merge_count
         )
+        print(f"After merging, {len(all_plan_samples)} samples")
         self.all_samples.extend(all_plan_samples)
 
     def pack_samples(self, idx):
@@ -336,7 +337,7 @@ if __name__ == "__main__":
     )
     setattr(DataArguments, "refactored_style", "plan_merged2padall")
     setattr(DataArguments, "final_style", None)
-    setattr(DataArguments, "max_total_samples", 100)
+    # setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
 
     tokenizer = AutoTokenizer.from_pretrained(
