@@ -15,6 +15,7 @@ from transformers import AutoTokenizer
 from dataloaders.enumerated_file_utils import (
     DATA_KEYS,
     PLAN_PAD_DATA_KEYS,
+    TRANSLATION_KEYS,
     get_question_path,
     get_passed_path,
     translate_solution_path,
@@ -43,12 +44,20 @@ def load_all_question_solutions(
                 passed = json.load(f)
             if not passed["global_check"]:
                 continue
-        if translation_style is not None:
+
+        if (
+            refactored_style in TRANSLATION_KEYS
+            and translation_style in TRANSLATION_KEYS
+        ):
             translated_solution_path = translate_solution_path(
                 solution_path, refactored_style, translation_style
             )
             if not os.path.exists(translated_solution_path):
                 continue
+        else:
+            print(
+                f"Skipping translation from {refactored_style} to {translation_style}"
+            )
         with open(solution_path, "r") as fp:
             solution = fp.read()
         question_path = get_question_path(solution_path)
@@ -58,8 +67,7 @@ def load_all_question_solutions(
 
 
 def split_dict(question_solutions: dict[str, list[str]], split_fraction: float):
-    total_solutions = sum(len(solutions)
-                          for solutions in question_solutions.values())
+    total_solutions = sum(len(solutions) for solutions in question_solutions.values())
     eval_breakpoint = int(total_solutions * split_fraction)
 
     eval_dict = {}
@@ -93,11 +101,8 @@ def build_refactored_datasets(tokenizer, data_args):
         question_solutions, split_fraction
     )
 
-    train_dataset = RefactoredDataset(
-        train_question_solutions, tokenizer, data_args
-    )
-    eval_dataset = RefactoredDataset(
-        eval_question_solutions, tokenizer, data_args)
+    train_dataset = RefactoredDataset(train_question_solutions, tokenizer, data_args)
+    eval_dataset = RefactoredDataset(eval_question_solutions, tokenizer, data_args)
     return train_dataset, eval_dataset
 
 
@@ -124,8 +129,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
             return f.read()
 
     def merge(self, samples: list[tuple[str]], merge_count: int):
-        sample_lengths = [sum([len(x[0]) for x in sample])
-                          for sample in samples]
+        sample_lengths = [sum([len(x[0]) for x in sample]) for sample in samples]
         i = 0
         j = i + merge_count
         new_samples = []
@@ -195,14 +199,11 @@ class RefactoredDataset(torch.utils.data.Dataset):
         print(f"Loaded {len(all_samples)} samples")
         print(f"Skipped {skip_count} samples")
         print(f"Solution cutoff in {cutoff_count} samples")
-        avg_token_lengths = {k: np.mean(v)
-                             for k, v in all_token_lengths.items()}
+        avg_token_lengths = {k: np.mean(v) for k, v in all_token_lengths.items()}
         print(f"Average token lengths: {avg_token_lengths}")
-        stdev_token_lengths = {k: np.std(v)
-                               for k, v in all_token_lengths.items()}
+        stdev_token_lengths = {k: np.std(v) for k, v in all_token_lengths.items()}
         print(f"Stdev token lengths: {stdev_token_lengths}")
-        max_token_lengths = {k: np.max(v)
-                             for k, v in all_token_lengths.items()}
+        max_token_lengths = {k: np.max(v) for k, v in all_token_lengths.items()}
         print(f"Max token lengths: {max_token_lengths}")
 
         self.all_samples = all_samples
@@ -267,14 +268,11 @@ class RefactoredDataset(torch.utils.data.Dataset):
         print(f"Loaded {len(all_plan_samples)} samples")
         print(f"Skipped {skip_count} samples")
         print(f"Solution cutoff in {cutoff_count} samples")
-        avg_token_lengths = {k: np.mean(v)
-                             for k, v in all_token_lengths.items()}
+        avg_token_lengths = {k: np.mean(v) for k, v in all_token_lengths.items()}
         print(f"Average token lengths: {avg_token_lengths}")
-        stdev_token_lengths = {k: np.std(v)
-                               for k, v in all_token_lengths.items()}
+        stdev_token_lengths = {k: np.std(v) for k, v in all_token_lengths.items()}
         print(f"Stdev token lengths: {stdev_token_lengths}")
-        max_token_lengths = {k: np.max(v)
-                             for k, v in all_token_lengths.items()}
+        max_token_lengths = {k: np.max(v) for k, v in all_token_lengths.items()}
         print(f"Max token lengths: {max_token_lengths}")
 
         all_plan_samples = self.merge(
