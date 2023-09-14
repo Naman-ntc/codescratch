@@ -149,6 +149,11 @@ def parse_args():
         action="store_true",
         help="(not used)",
     )
+    parser.add_argument(
+        "--eval_mode_only",
+        action="store_true",
+        help="(not used)",
+    )
     args = parser.parse_args()
 
     precision_map = {
@@ -156,7 +161,6 @@ def parse_args():
         "fp16": "float16",
         "bf16": "bfloat16",
     }
-
     args.precision = precision_map[args.precision]
     args.tasks = pattern_match(args.tasks.split(","), ALL_TASKS)
     assert (

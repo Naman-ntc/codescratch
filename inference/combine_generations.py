@@ -4,29 +4,32 @@ import json
 
 
 def format_solution(solution):
-    if (
-        'if __name__ == "__main__":' in solution
-        or "if __name__ == '__main__':" in solution
-    ):
-        try:
-            astree = ast.parse(solution)
-        except:
+    try:
+        if (
+            'if __name__ == "__main__":' in solution
+            or "if __name__ == '__main__':" in solution
+        ):
+            try:
+                astree = ast.parse(solution)
+            except:
+                return solution
+            if not isinstance(astree.body[-1], ast.If):
+                return solution
+
+            ifblock = astree.body[-1]
+
+            assert ast.unparse(ifblock.test) in [
+                '__name__ == "__main__"',
+                "__name__ == '__main__'",
+            ], ast.unparse(ifblock.test)
+            assert ifblock.orelse == [], ast.unparse(ifblock.orelse)
+
+            astree.body = astree.body[:-1] + ifblock.body
+            new_solution = ast.unparse(astree)
+            return new_solution
+        else:
             return solution
-        if not isinstance(astree.body[-1], ast.If):
-            return solution
-
-        ifblock = astree.body[-1]
-
-        assert ast.unparse(ifblock.test) in [
-            '__name__ == "__main__"',
-            "__name__ == '__main__'",
-        ], ast.unparse(ifblock.test)
-        assert ifblock.orelse == [], ast.unparse(ifblock.orelse)
-
-        astree.body = astree.body[:-1] + ifblock.body
-        new_solution = ast.unparse(astree)
-        return new_solution
-    else:
+    except:
         return solution
 
 
