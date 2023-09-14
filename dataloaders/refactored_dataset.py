@@ -335,7 +335,7 @@ if __name__ == "__main__":
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "plan_merged2padall")
+    setattr(DataArguments, "refactored_style", "plan_merged2pad2")
     setattr(DataArguments, "final_style", None)
     # setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
