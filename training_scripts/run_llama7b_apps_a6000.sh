@@ -9,6 +9,8 @@ dictionary=(
     ['planm2']='plan_merged2'
     ['planm1padall']='plan_merged1padall'
     ['planm2padall']='plan_merged2padall'
+    ['planm1pad2']='plan_merged1pad2'
+    ['planm2pad2']='plan_merged2pad2'
 )
 
 short_refactored_style=$1
