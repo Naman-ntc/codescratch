@@ -37,6 +37,13 @@ def load_all_question_solutions(
         len(glob.glob(globbed_solution_path)) > 0
     ), f"no files found at {globbed_solution_path}"
     question_solutions = defaultdict(list)
+
+    do_translation = (
+        refactored_style in TRANSLATION_KEYS and translation_style in TRANSLATION_KEYS
+    )
+    if not do_translation:
+        print(f"Skipping translation from {refactored_style} to {translation_style}")
+
     for solution_path in tqdm.tqdm(glob.glob(globbed_solution_path)):
         if filter_not_passed:  # only necessary for base solutions
             passed_path = get_passed_path(solution_path)
@@ -45,19 +52,13 @@ def load_all_question_solutions(
             if not passed["global_check"]:
                 continue
 
-        if (
-            refactored_style in TRANSLATION_KEYS
-            and translation_style in TRANSLATION_KEYS
-        ):
+        if do_translation:
             translated_solution_path = translate_solution_path(
                 solution_path, refactored_style, translation_style
             )
             if not os.path.exists(translated_solution_path):
                 continue
-        else:
-            print(
-                f"Skipping translation from {refactored_style} to {translation_style}"
-            )
+
         with open(solution_path, "r") as fp:
             solution = fp.read()
         question_path = get_question_path(solution_path)
