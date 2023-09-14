@@ -172,7 +172,14 @@ def get_results(
     {'avg_accuracy': None, 'strict_accuracy': None, 'pass_at_k': {'pass@1': 0.25, 'pass@2': 0.5}}
     """
 
-    metrics = {"avg_accuracy": None, "strict_accuracy": None, "pass_at_k": None}
+    metrics = {
+        "avg_accuracy": None,
+        "strict_accuracy": None,
+        "pass_at_k": None,
+        "compile_errors": None,
+        "runtime_errors": None,
+        "wrong_answer": None,
+    }
 
     if len(results[0]) == 1:
         # for single generations we compute average accuracy and stric accuracy: original APPS metrics
@@ -212,12 +219,37 @@ def get_results(
         # correct is number of generations that passed all tests per task
         total = []
         correct = []
+        compile_error_counts = []
+        runtime_error_counts = []
+        wrong_answer_counts = []
         assert all([isinstance(x, int) for x in results.keys()])
         for index in sorted(results):
             all_correct = []
+            compile_error_counts_per_task = []
+            runtime_error_counts_per_task = []
+            wrong_answer_counts_per_task = []
             for generation in results[index]:
                 gen = np.array(generation)
                 all_correct.append(np.all(gen > 0))
+                compile_error_counts_per_task.append(False)
+                runtime_error_counts_per_task.append(False)
+                wrong_answer_counts_per_task.append(False)
+
+                contains_compile_error = (gen == -2).any()
+                contains_runtime_error = (gen == -1).any()
+                contains_wrong_answer = (gen == False).any()
+                if contains_compile_error:
+                    compile_error_counts_per_task[-1] = True
+                elif contains_runtime_error:
+                    runtime_error_counts_per_task[-1] = True
+                elif contains_wrong_answer:
+                    wrong_answer_counts_per_task[-1] = True
+                # compile_error_counts_per_task.append((gen == -2).any())
+                # runtime_error_counts_per_task.append((gen == -1).any())
+                # wrong_answer_counts_per_task.append((gen == False).any())
+            compile_error_counts.append(compile_error_counts_per_task)
+            runtime_error_counts.append(runtime_error_counts_per_task)
+            wrong_answer_counts.append(wrong_answer_counts_per_task)
             total.append(len(all_correct))
             correct.append(sum(all_correct))
         total = np.array(total)
@@ -232,6 +264,20 @@ def get_results(
         }
         print(pass_at_k)
         metrics["pass_at_k"] = pass_at_k
+
+        compile_error_counts = np.array(compile_error_counts)
+        runtime_error_counts = np.array(runtime_error_counts)
+        wrong_answer_counts = np.array(wrong_answer_counts)
+
+        metrics["compile_errors_mean"] = compile_error_counts.mean(axis=1).mean()
+        metrics["runtime_errors_mean"] = runtime_error_counts.mean(axis=1).mean()
+        metrics["wrong_answer_mean"] = wrong_answer_counts.mean(axis=1).mean()
+
+        metrics["correct_counts"] = correct.tolist()
+        metrics["compile_errors_counts"] = compile_error_counts.sum(axis=1).tolist()
+        metrics["runtime_errors_counts"] = runtime_error_counts.sum(axis=1).tolist()
+        metrics["wrong_answer_counts"] = wrong_answer_counts.sum(axis=1).tolist()
+
     return metrics
 
 
@@ -275,7 +321,7 @@ def compute_metrics(
     """
     results = evaluate_generations(dataset, generations, level=level, debug=debug)
     metrics = get_results(results, count_errors=count_errors, k_list=k_list)
-    return metrics
+    return metrics, results
 
 
 # import doctest
