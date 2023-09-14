@@ -21,7 +21,9 @@ class Generator:
     def generate(self, task_name):
         task = tasks.get_task(task_name)
         dataset = task.get_dataset()
-
+        if task.stop_words:
+            if self.tokenizer.eos_token:
+                task.stop_words.append(self.tokenizer.eos_token)
         if self.args.limit is not None:
             dataset = dataset.select(range(self.args.limit))
 
