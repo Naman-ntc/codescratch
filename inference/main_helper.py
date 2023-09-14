@@ -81,6 +81,12 @@ def parse_args():
         help="Maximum length of generated sequence (prompt+generation)",
     )
     parser.add_argument(
+        "--max_num_batched_tokens",
+        type=int,
+        default=2506,
+        help="Maximum number of tokens that can be batched together on a single GPU (used by vllm)",
+    )
+    parser.add_argument(
         "--precision",
         type=str,
         default="bf16",
@@ -181,8 +187,10 @@ def main():
     datasets.logging.set_verbosity_error()
 
     model = LLM(
-        model=args.model, dtype=args.precision, trust_remote_code=args.trust_remote_code,
-        max_num_batched_tokens=16000,
+        model=args.model,
+        dtype=args.precision,
+        trust_remote_code=args.trust_remote_code,
+        max_num_batched_tokens=args.max_num_batched_tokens,
     )
 
     tokenizer = AutoTokenizer.from_pretrained(

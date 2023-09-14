@@ -94,6 +94,12 @@ def parse_args():
         help="Maximum length of generated sequence (prompt+generation)",
     )
     parser.add_argument(
+        "--max_num_batched_tokens",
+        type=int,
+        default=2506,
+        help="Maximum number of tokens that can be batched together on a single GPU (used by vllm)",
+    )
+    parser.add_argument(
         "--precision",
         type=str,
         default="bf16",
@@ -242,7 +248,9 @@ def main():
 
     combined_json = f"{args.base_directory}/generations_{args.exp_name}.json"
 
-    generations, formatted_generations = combine_generations(generations_paths, combined_json)
+    generations, formatted_generations = combine_generations(
+        generations_paths, combined_json
+    )
 
     evaluation_results = evaluate_generations(
         task, args, formatted_generations, references
