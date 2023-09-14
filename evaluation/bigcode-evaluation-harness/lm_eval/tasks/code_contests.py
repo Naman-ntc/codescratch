@@ -57,6 +57,7 @@ class GeneralCodeContests(Task):
     """
 
     DATASET_PATH = "deepmind/code_contests"
+    SPLITS = ["test", "valid"]
 
     def __init__(self, level):
         self.level = level
@@ -67,6 +68,7 @@ class GeneralCodeContests(Task):
         self.filter_by_platform()
 
     def filter_by_platform(self):
+        print(self.dataset)
         self.dataset1 = self.dataset["test"]
         self.dataset2 = self.dataset["valid"]
         self.dataset = concatenate_datasets([self.dataset1, self.dataset2])

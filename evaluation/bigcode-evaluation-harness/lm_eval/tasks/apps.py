@@ -64,6 +64,7 @@ class GeneralAPPS(Task):
 
     DATASET_PATH = "codeparrot/apps"
     DATASET_NAME = None
+    SPLITS = ["test"]
 
     def __init__(self, level, platforms=None):
         self.DATASET_NAME = level

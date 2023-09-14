@@ -6,10 +6,10 @@ temperature=$4
 if [ $difficulty == "intro" ]
 then
     task="apps-introductory-cfstyle"
-elif [ $difficulty == "med" ]
+elif [ $difficulty == "interview" ]
 then
     task="apps-interview-cfstyle"
-elif [ $difficulty == "hard" ]
+elif [ $difficulty == "competition" ]
 then
     task="apps-competition-cfstyle"
 else

@@ -15,6 +15,8 @@ class Task(ABC):
     # The name of a subset within `DATASET_PATH`.
     DATASET_NAME: str = None
 
+    SPLITS: list = []
+
     def __init__(self, stop_words=None, requires_execution=True):
         """
         :param stop_words: list
@@ -25,7 +27,12 @@ class Task(ABC):
         self.stop_words = stop_words
         self.requires_execution = requires_execution
         try:
-            self.dataset = load_dataset(path=self.DATASET_PATH, name=self.DATASET_NAME)
+            self.dataset = load_dataset(
+                path=self.DATASET_PATH, name=self.DATASET_NAME, split=self.SPLITS
+            )
+            self.dataset = {
+                split: self.dataset[idx] for idx, split in enumerate(self.SPLITS)
+            }
         except:
             warn(
                 "This task will use a locally downloaded dataset, not from the HF hub."
