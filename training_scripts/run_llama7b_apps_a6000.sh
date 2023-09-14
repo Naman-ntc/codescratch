@@ -28,7 +28,7 @@ fi
 deepspeed code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
     --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
-    --refactored_base_path /root/codescratch/code_contests_enumerated_train/ \
+    --refactored_base_path /root/codescratch/apps_enumerated_old/ \
     --refactored_style $refactored_style \
     --final_style $final_style \
     --low_cpu_mem_usage True \
