@@ -3,19 +3,19 @@ DATA_KEYS = {
     "rename_original": "all_solutions/*/rename/EPC_RV2/original/solution.py",
     "modularize_original": "all_solutions/*/modularize/EPC_M2/original/solution.py",
     "remodularize_merged": "all_solutions/*/remodularize/EPC_RMFN/remod_merged/solution.py",
-    "plan_merged1": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[0].py",
-    "plan_merged2": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[01].py",
-    "plan_merged4": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[0123].py",
-    "plan_merged6": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[012345].py",
-    "plan_merged1padall": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[0].py",
-    "plan_merged2padall": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[01].py",
-    "plan_merged4padall": "all_solutions/*/planning/EPC_PFN/plans_merged/attempt_[0123].py",
+    "plan_merged1": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0].py",
+    "plan_merged2": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[01].py",
+    "plan_merged4": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0123].py",
+    "plan_merged6": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[012345].py",
+    "plan_merged1padall": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0].py",
+    "plan_merged2padall": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[01].py",
+    "plan_merged4padall": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0123].py",
 }
 
 PLAN_PAD_DATA_KEYS = {
-    "plan_merged1padall": "all_solutions/*/planning/EPC_PFN/plans/attempt_[12345].txt",
-    "plan_merged2padall": "all_solutions/*/planning/EPC_PFN/plans/attempt_[2345].txt",
-    "plan_merged4padall": "all_solutions/*/planning/EPC_PFN/plans/attempt_[45].txt",
+    "plan_merged1padall": "all_solutions/*/planning/EPC_LPFN/plans/attempt_[12345].txt",
+    "plan_merged2padall": "all_solutions/*/planning/EPC_LPFN/plans/attempt_[2345].txt",
+    "plan_merged4padall": "all_solutions/*/planning/EPC_LPFN/plans/attempt_[45].txt",
 }
 
 TRANSLATION_KEYS = {
