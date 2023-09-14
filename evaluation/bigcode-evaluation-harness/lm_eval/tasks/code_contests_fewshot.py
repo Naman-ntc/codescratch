@@ -88,8 +88,11 @@ class FewShotCodeContests(Task):
 
     def build_few_shot_examples(self):
         import os
+
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        with open(f"{dir_path}/few_shot_examples/contests_few_shot_examples.json", "r") as fp:
+        with open(
+            f"{dir_path}/few_shot_examples/contests_few_shot_examples.json", "r"
+        ) as fp:
             few_shot_examples = json.load(fp)[self.style]
 
         self.base_prompt = ""
@@ -147,7 +150,7 @@ class FewShotCodeContests(Task):
             (not used for APPS)
         """
         try:
-            generation = generation.split("\nANSWER:", 1)[1]
+            generation = generation.split("\nANSWER:")[-1]
             generation = self._stop_at_stop_token(generation, self.stop_words)
             generation = generation.strip()
         except IndexError:
@@ -172,8 +175,7 @@ class FewShotCodeContests(Task):
         )
 
         results = compute_metrics(
-            self.dataset, generations, k_list=[
-                1, 5, 10, 25, 50, 75, 100, 125, 150]
+            self.dataset, generations, k_list=[1, 5, 10, 25, 50, 75, 100, 125, 150]
         )
         return results
 

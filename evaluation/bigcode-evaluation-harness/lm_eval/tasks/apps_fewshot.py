@@ -93,8 +93,11 @@ class FewShotAPPS(Task):
 
     def build_few_shot_examples(self):
         import os
+
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        with open(f"{dir_path}/few_shot_examples/apps_few_shot_examples.json", "r") as fp:
+        with open(
+            f"{dir_path}/few_shot_examples/apps_few_shot_examples.json", "r"
+        ) as fp:
             print(self.style)
             few_shot_examples = json.load(fp)[self.style]
 
@@ -117,13 +120,11 @@ class FewShotAPPS(Task):
         Finetuning setup: prompt=question  with some starter code and function name if they exist.
         We also specify the type of the prompt, i.e. whether it is call-based or standard input-based.
         """
-        starter_code = None if len(
-            doc["starter_code"]) == 0 else doc["starter_code"]
+        starter_code = None if len(doc["starter_code"]) == 0 else doc["starter_code"]
         try:
             input_outpout = json.loads(doc["input_output"])
             fn_name = (
-                None if not input_outpout.get(
-                    "fn_name") else input_outpout["fn_name"]
+                None if not input_outpout.get("fn_name") else input_outpout["fn_name"]
             )
         except ValueError:
             fn_name = None
@@ -204,7 +205,7 @@ class FewShotAPPS(Task):
             (not used for APPS)
         """
         try:
-            generation = generation.split("\nANSWER:", 1)[1]
+            generation = generation.split("\nANSWER:")[-1]
             generation = self._stop_at_stop_token(generation, self.stop_words)
             generation = generation.strip()
         except IndexError:
@@ -229,15 +230,13 @@ class FewShotAPPS(Task):
         )
 
         results = compute_metrics(
-            self.dataset, generations, k_list=[
-                1, 5, 10, 25, 50, 75, 100, 125, 150]
+            self.dataset, generations, k_list=[1, 5, 10, 25, 50, 75, 100, 125, 150]
         )
         return results
 
 
 if __name__ == "__main__":
-    task = FewShotAPPS(
-        "introductory", "plan", ["codeforces", "codechef", "atcoder"])
+    task = FewShotAPPS("introductory", "plan", ["codeforces", "codechef", "atcoder"])
     print(task)
     dataset = task.get_dataset()
     p1 = task.get_prompt(dataset[0])
