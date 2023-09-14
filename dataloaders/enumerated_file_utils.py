@@ -13,9 +13,9 @@ DATA_KEYS = {
 }
 
 PLAN_PAD_DATA_KEYS = {
-    "plan_merged1padall": "all_solutions/*/planning/EPC_LPFN/plans/attempt_[12345].txt",
-    "plan_merged2padall": "all_solutions/*/planning/EPC_LPFN/plans/attempt_[2345].txt",
-    "plan_merged4padall": "all_solutions/*/planning/EPC_LPFN/plans/attempt_[45].txt",
+    "plan_merged1padall": "all_solutions/*/planning/EPC_LPFN/plans/plan_[12345].txt",
+    "plan_merged2padall": "all_solutions/*/planning/EPC_LPFN/plans/plan_[2345].txt",
+    "plan_merged4padall": "all_solutions/*/planning/EPC_LPFN/plans/plan_[45].txt",
 }
 
 TRANSLATION_KEYS = {
