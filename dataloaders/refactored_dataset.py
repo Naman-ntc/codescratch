@@ -96,6 +96,13 @@ def build_refactored_datasets(tokenizer, data_args):
         data_args.refactored_style,
         data_args.final_style,
     )
+    # sample data_args.max_total_samples
+    if data_args.max_total_samples is not None:
+        question_solutions = dict(
+            random.sample(
+                question_solutions.items(), data_args.max_total_samples
+            )  # noqa
+        )
     split_fraction: float = data_args.eval_split_percentage * 0.01
 
     train_question_solutions, eval_question_solutions = split_dict(
@@ -142,7 +149,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
                     i = i + 1
                     j = i + merge_count
                 continue
-            new_sample = samples[i:j]
+            new_sample = tuple(sum(samples[i:j], []))
             new_samples.append(new_sample)
             i = j
             j = i + merge_count
@@ -227,6 +234,8 @@ class RefactoredDataset(torch.utils.data.Dataset):
         )
         for plan_txt_file in tqdm.tqdm(all_plan_txt_files):
             question_path = get_question_path(plan_txt_file)
+            if question_path not in self.question_solutions:
+                continue
 
             question_str = RefactoredDataset.read_file(question_path)
             plan_txt_str = RefactoredDataset.read_file(plan_txt_file)
@@ -325,8 +334,9 @@ if __name__ == "__main__":
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "plan_merged1")
+    setattr(DataArguments, "refactored_style", "plan_merged2padall")
     setattr(DataArguments, "final_style", None)
+    setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
 
     tokenizer = AutoTokenizer.from_pretrained(
