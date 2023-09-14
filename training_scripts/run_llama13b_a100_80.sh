@@ -1,21 +1,30 @@
-refactored_style=$1
-final_style=$2
+declare -A dictionary
+dictionary=(
+    ['base']='base_original'
+    ['rename']='rename_original'
+    ['mod']='modularize_original'
+    ['remod']='remodularize_merged'
+    ['planm1']='plan_merged1'
+    ['planm2']='plan_merged2'
+    ['planm1padall']='plan_merged1padall'
+    ['planm2padall']='plan_merged2padall'
+)
 
-dictionary = {
-    'base_original': 'base',
-    'rename_original': 'rename',
-    'modularize_original': 'mod',
-    'remodularize_merged': 'remod',
-    'plan_merged1': 'planm1',
-    'plan_merged2': 'planm2',
-    'plan_merged1padall': 'planm1padall',
-    'plan_merged2padall': 'planm2padall',
-}
+short_refactored_style=$1
+short_final_style=$2
 
-short_refactored_style=${dictionary[$refactored_style]}
-short_final_style=${dictionary[$final_style]}
+refactored_style=${dictionary[$short_refactored_style]}
+final_style=${dictionary[$short_final_style]}
 
-torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
+if [ -z "$3" ]
+then
+    num_epochs=2
+else
+    num_epochs=$3
+fi
+
+
+torchrun --nproc_per_node=8 code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
     --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
     --refactored_base_path TODO \
@@ -25,8 +34,8 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --use_xformer_attn True \
     --bf16 True \
     --tf32 True \
-    --output_dir "checkpoints_codellama_13b_apps_${short_refactored_style}_2e5_256_2" \
-    --num_train_epochs 2 \
+    --output_dir "checkpoints_codellama_13b_apps_${short_refactored_style}_${short_final_style}_2e5_256_${num_epochs}" \
+    --num_train_epochs $num_epochs \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 32 \
     --per_device_train_batch_size 1 \
@@ -43,7 +52,7 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --logging_steps 5 \
     --block_size 2048 \
     --report_to wandb \
-    --run_name codellama_apps_13b_base_2e5_256_4 \
+    --run_name "codellama_apps_13b_${short_refactored_style}_${short_final_style}_2e5_256_${$num_epochs}" \
     --do_train \
     --do_eval \
     --fsdp "full_shard auto_wrap" \

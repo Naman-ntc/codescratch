@@ -16,7 +16,7 @@ short_final_style=$2
 refactored_style=${dictionary[$short_refactored_style]}
 final_style=${dictionary[$short_final_style]}
 
-torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
+torchrun --nproc_per_node=8 code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
     --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
     --refactored_base_path TODO \
@@ -26,7 +26,7 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --use_xformer_attn True \
     --bf16 True \
     --tf32 True \
-    --output_dir "checkpoints_codellama_7b_contests_${short_refactored_style}_2e5_256_1" \
+    --output_dir "checkpoints_codellama_7b_contests_${short_refactored_style}_${short_final_style}_2e5_256_1" \
     --num_train_epochs 1 \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 8 \
@@ -44,7 +44,7 @@ torchrun --nproc_per_node=8 --rdzv-endpoint localhost:29512 code_trainer.py \
     --logging_steps 5 \
     --block_size 2048 \
     --report_to wandb \
-    --run_name codellama_7b_contests_base_2e5_256_1 \
+    --run_name "codellama_7b_contests_${short_refactored_style}_${short_final_style}_2e5_256_1" \
     --do_train \
     --do_eval \
     --fsdp "full_shard auto_wrap" \
