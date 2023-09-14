@@ -12,6 +12,9 @@ then
 elif [ $difficulty == "hard" ]
 then
     task="codecontests-hard"
+elif [ $difficulty == "test" ]
+then
+    task="codecontests-test"
 else
     echo "Invalid difficulty: $difficulty"
     exit 1
