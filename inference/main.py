@@ -242,10 +242,10 @@ def main():
 
     combined_json = f"{args.base_directory}/generations_{args.exp_name}.json"
 
-    combined_generations = combine_generations(generations_paths, combined_json)
+    generations, formatted_generations = combine_generations(generations_paths, combined_json)
 
     evaluation_results = evaluate_generations(
-        task, args, combined_generations, references
+        task, args, formatted_generations, references
     )
 
     if isinstance(evaluation_results, tuple):
