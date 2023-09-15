@@ -29,6 +29,20 @@ except:
 # borrowed and modified from https://github.com/bigcode-project/bigcode-evaluation-harness/blob/main/finetuning/APPS/apps_dataset.py
 
 
+def read_solution_with_smallest_plan(solution_path):
+    if "attempt_" not in solution_path:
+        return RefactoredDataset.read_file(solution_path)
+    paths = [
+        os.path.join(os.path.dirname(solution_path), "attempt_0.py"),
+        os.path.join(os.path.dirname(solution_path), "attempt_1.py"),
+        os.path.join(os.path.dirname(solution_path), "attempt_2.py"),
+    ]
+
+    plans = [RefactoredDataset.read_file(path) for path in paths]
+    smallest_plan = min(plans, key=lambda x: len(x))
+    return smallest_plan
+
+
 def load_all_question_solutions(
     refactored_base_path, filter_not_passed, refactored_style, translation_style
 ):
@@ -59,8 +73,8 @@ def load_all_question_solutions(
             if not os.path.exists(translated_solution_path):
                 continue
 
-        with open(solution_path, "r") as fp:
-            solution = fp.read()
+        solution = read_solution_with_smallest_plan(solution_path)
+
         question_path = get_question_path(solution_path)
         question_solutions[question_path].append(solution)
     assert len(question_solutions) > 0, "no solutions found"
@@ -136,6 +150,18 @@ class RefactoredDataset(torch.utils.data.Dataset):
         with open(path, "r") as f:
             return f.read()
 
+    @staticmethod
+    def read_small_plan_code(path):
+        paths = [
+            os.path.join(os.path.dirname(path), "attempt_0.py"),
+            os.path.join(os.path.dirname(path), "attempt_1.py"),
+            os.path.join(os.path.dirname(path), "attempt_2.py"),
+        ]
+
+        plans = [RefactoredDataset.read_file(path) for path in paths]
+        smallest_plan = min(plans, key=lambda x: len(x))
+        return smallest_plan
+
     def merge(self, samples: list[tuple[str]], merge_count: int):
         sample_lengths = [sum([len(x[0]) for x in sample]) for sample in samples]
         i = 0
@@ -169,12 +195,23 @@ class RefactoredDataset(torch.utils.data.Dataset):
             answer_type = "\nUse Standard Input format\n"
 
             for solution in solutions:
+                # remove samples with long plan
+                plan_lines = ""
+                for solution_line in solution.split("\n"):
+                    if solution_line.startswith("# "):
+                        plan_lines += solution_line + "\n"
+                    else:
+                        break
+
+                plan_str_tokens = self.tokenizer(plan_lines)["input_ids"]
+
+                if len(plan_str_tokens) > 450:
+                    skip_count += 1
+                    continue
+
                 # remove samples with long questions
                 q_str = f"QUESTION:\n{question_str}\n{answer_type}\nANSWER:\n\n"
                 q_str_tokens = self.tokenizer(q_str)["input_ids"]
-
-                if q_str_tokens[-1] == self.tokenizer.eos_token_id:
-                    q_str_tokens = q_str_tokens[:-1]
 
                 q_tokens_count = len(q_str_tokens)
 
@@ -332,10 +369,10 @@ if __name__ == "__main__":
     setattr(
         DataArguments,
         "refactored_base_path",
-        "/home/naman/Repos/CodeQuality/apps_enumerated_old",
-        # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
+        # "/home/naman/Repos/CodeQuality/apps_enumerated_old",
+        "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "plan_merged2pad2")
+    setattr(DataArguments, "refactored_style", "plan_merged1")
     setattr(DataArguments, "final_style", None)
     # setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
@@ -344,6 +381,12 @@ if __name__ == "__main__":
         "codellama/CodeLlama-7b-hf",
         use_auth_token=True,
         trust_remote_code=True,
+    )
+
+    print(
+        tokenizer.convert_ids_to_tokens(
+            tokenizer("hello world")["input_ids"] + [tokenizer.eos_token_id]
+        )
     )
 
     dataset, _ = build_refactored_datasets(tokenizer, DataArguments)
