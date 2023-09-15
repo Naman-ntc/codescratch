@@ -204,6 +204,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
                         break
 
                 plan_str_tokens = self.tokenizer(plan_lines)["input_ids"]
+                plan_tokens_count = len(plan_str_tokens)
 
                 if len(plan_str_tokens) > 450:
                     skip_count += 1
@@ -237,6 +238,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
                     (solution_str_tokens, 0),
                 ]
                 all_token_lengths["question"].append(q_tokens_count)
+                all_token_lengths["plan"].append(plan_tokens_count)
                 all_token_lengths["solution"].append(solution_tokens_count)
                 all_token_lengths["total"].append(total_tokens_count)
                 all_samples.append(sample)
