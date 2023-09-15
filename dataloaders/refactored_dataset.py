@@ -187,6 +187,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
         all_samples: list[tuple[list[str], bool]] = []
         all_token_lengths = {
             "question": [],
+            "plan": [],
             "solution": [],
             "total": [],
         }
