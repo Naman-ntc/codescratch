@@ -220,9 +220,9 @@ class RefactoredDataset(torch.utils.data.Dataset):
                     skip_count += 1
                     continue
 
-                solution_str_tokens = self.tokenizer(solution)["input_ids"] + [
-                    self.tokenizer.eos_token_id
-                ]
+                # solution_str_tokens = self.tokenizer(solution)["input_ids"] + [
+                #     self.tokenizer.eos_token_id
+                # ]
                 if solution_str_tokens[0] == self.tokenizer.bos_token_id:
                     solution_str_tokens = solution_str_tokens[1:]
 
