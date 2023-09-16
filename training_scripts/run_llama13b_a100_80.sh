@@ -26,8 +26,7 @@ fi
 
 torchrun --nproc_per_node=8 code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
-    --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
-    --refactored_base_path TODO \
+    --refactored_base_path apps_enumerated_old \
     --refactored_style $refactored_style \
     --final_style $final_style \
     --low_cpu_mem_usage True \
@@ -55,6 +54,4 @@ torchrun --nproc_per_node=8 code_trainer.py \
     --run_name "codellama_apps_13b_${short_refactored_style}_${short_final_style}_2e5_256_${$num_epochs}" \
     --do_train \
     --do_eval \
-    --fsdp "full_shard auto_wrap" \
-    --fsdp_transformer_layer_cls_to_wrap 'LlamaDecoderLayer' \
-    # --final_style modularize_original \
+    --deepspeed utils/ds_config.json \

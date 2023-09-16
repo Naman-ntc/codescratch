@@ -16,10 +16,9 @@ short_final_style=$2
 refactored_style=${dictionary[$short_refactored_style]}
 final_style=${dictionary[$short_final_style]}
 
-torchrun --nproc_per_node=8 code_trainer.py \
+deepspeed code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
-    --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
-    --refactored_base_path TODO \
+    --refactored_base_path code_contests_enumerated_train \
     --refactored_style $refactored_style \
     --final_style $final_style \
     --low_cpu_mem_usage True \
@@ -47,5 +46,4 @@ torchrun --nproc_per_node=8 code_trainer.py \
     --run_name "codellama_7b_contests_${short_refactored_style}_${short_final_style}_2e5_256_1" \
     --do_train \
     --do_eval \
-    --fsdp "full_shard auto_wrap" \
-    --fsdp_transformer_layer_cls_to_wrap 'LlamaDecoderLayer' \
+    --deepspeed utils/ds_config.json \
