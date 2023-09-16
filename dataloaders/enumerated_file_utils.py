@@ -8,8 +8,10 @@ DATA_KEYS = {
     "plan_merged4": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0123].py",
     "plan_merged6": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[012345].py",
     "plan_merged1padall": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0].py",
+    "plan_merged1pad1": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0].py",
     "plan_merged1pad2": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0].py",
     "plan_merged2padall": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[01].py",
+    "plan_merged2pad1": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[01].py",
     "plan_merged2pad2": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[01].py",
     "plan_merged4padall": "all_solutions/*/planning/EPC_LPFN/plans_merged/attempt_[0123].py",
 }
@@ -20,6 +22,8 @@ PLAN_PAD_DATA_KEYS = {
     "plan_merged4padall": "all_solutions/*/planning/EPC_LPFN/plans/plan_[45].txt",
     "plan_merged1pad2": "all_solutions/*/planning/EPC_LPFN/plans/plan_[12].txt",
     "plan_merged2pad2": "all_solutions/*/planning/EPC_LPFN/plans/plan_[23].txt",
+    "plan_merged1pad1": "all_solutions/*/planning/EPC_LPFN/plans/plan_[1].txt",
+    "plan_merged2pad1": "all_solutions/*/planning/EPC_LPFN/plans/plan_[2].txt",
 }
 
 TRANSLATION_KEYS = {
