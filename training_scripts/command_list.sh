@@ -20,8 +20,9 @@ bash training_scripts/run_contests_llama7b_a100_80.sh base remod
 bash training_scripts/run_contests_llama7b_a100_80.sh remod remod
 
 # planning
-bash training_scripts/run_contests_llama7b_a100_80.sh planm1padall remod
+bash training_scripts/run_contests_llama7b_a100_80.sh planm1pad1 remod
 bash training_scripts/run_contests_llama7b_a100_80.sh planm1 remod
+bash training_scripts/run_contests_llama7b_a100_80.sh planm1padall remod
 
 # ablation
 bash training_scripts/run_contests_llama7b_a100_80.sh rename remod
