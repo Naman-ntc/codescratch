@@ -30,6 +30,7 @@ except:
 
 
 def read_solution_with_smallest_plan(solution_path):
+    return RefactoredDataset.read_file(solution_path)
     if "attempt_" not in solution_path:
         return RefactoredDataset.read_file(solution_path)
     paths = [
@@ -377,7 +378,7 @@ if __name__ == "__main__":
     )
     setattr(DataArguments, "refactored_style", "plan_merged1")
     setattr(DataArguments, "final_style", None)
-    # setattr(DataArguments, "max_total_samples", 100)
+    setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
 
     tokenizer = AutoTokenizer.from_pretrained(
@@ -396,3 +397,10 @@ if __name__ == "__main__":
 
     print(len(dataset))
     print(dataset[0])
+
+    print(tokenizer.convert_ids_to_tokens(dataset[0]["input_ids"]))
+    print(
+        tokenizer.convert_ids_to_tokens(
+            [tokenizer.eos_token_id if x == -100 else x for x in dataset[0]["labels"]]
+        )
+    )
