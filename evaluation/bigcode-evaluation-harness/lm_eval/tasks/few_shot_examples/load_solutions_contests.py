@@ -1,16 +1,16 @@
 import json
 
-base1 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_2/all_solutions/1/base/base/original/solution.py"
-rename1 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_2/all_solutions/1/rename/EPC_RV2/original/solution.py"
-remod1 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_2/all_solutions/1/remodularize/EPC_RMFN/remod_merged/solution.py"
-plan1 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_2/all_solutions/1/planning/EPC_PFN/plans_merged/attempt_0.py"
-question1 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_2/question/question.txt"
+base1 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_8/all_solutions/1/base/base/original/solution.py"
+rename1 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_8/all_solutions/1/rename/EPC_RV2/original/solution.py"
+remod1 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_8/all_solutions/1/remodularize/EPC_RMFN/remod_merged/solution.py"
+plan1 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_8/all_solutions/1/planning/EPC_LPFN/plans_merged/attempt_0.py"
+question1 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_8/question/question.txt"
 
-base2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/base/base/original/solution.py"
-rename2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/rename/EPC_RV2/original/solution.py"
-remod2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/remodularize/EPC_RMFN/remod_merged/solution.py"
-plan2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/planning/EPC_PFN/plans_merged/attempt_0.py"
-question2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/question/question.txt"
+base2 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_889/all_solutions/4/base/base/original/solution.py"
+rename2 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_889/all_solutions/4/rename/EPC_RV2/original/solution.py"
+remod2 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_889/all_solutions/4/remodularize/EPC_RMFN/remod_merged/solution.py"
+plan2 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_889/all_solutions/4/planning/EPC_LPFN/plans_merged/attempt_0.py"
+question2 = "/home/naman/Repos/CodeQuality/code_contests_enumerated_train/row_889/question/question.txt"
 
 all_vars = [
     "base1",
@@ -69,7 +69,6 @@ few_shot_examples = {
             "answer": plan2,
         },
     ],
-
 }
 
 with open("contests_few_shot_examples.json", "w") as fp:
