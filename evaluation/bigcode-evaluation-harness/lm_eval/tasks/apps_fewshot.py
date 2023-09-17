@@ -65,6 +65,7 @@ class FewShotAPPS(Task):
 
     DATASET_PATH = "codeparrot/apps"
     DATASET_NAME = None
+    SPLITS = ["test"]
 
     def __init__(self, level, style, platforms=None):
         self.DATASET_NAME = level
