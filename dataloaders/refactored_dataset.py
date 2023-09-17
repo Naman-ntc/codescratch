@@ -48,9 +48,8 @@ def load_all_question_solutions(
     refactored_base_path, filter_not_passed, refactored_style, translation_style
 ):
     globbed_solution_path = f"{refactored_base_path}/*/{DATA_KEYS[refactored_style]}"
-    assert (
-        len(glob.glob(globbed_solution_path)) > 0
-    ), f"no files found at {globbed_solution_path}"
+    globbed_solution_path = glob.glob(globbed_solution_path)
+    assert len(globbed_solution_path) > 0, f"no files found at {globbed_solution_path}"
     question_solutions = defaultdict(list)
 
     do_translation = (
@@ -59,7 +58,7 @@ def load_all_question_solutions(
     if not do_translation:
         print(f"Skipping translation from {refactored_style} to {translation_style}")
 
-    for solution_path in tqdm.tqdm(glob.glob(globbed_solution_path)):
+    for solution_path in tqdm.tqdm(globbed_solution_path):
         if filter_not_passed:  # only necessary for base solutions
             passed_path = get_passed_path(solution_path)
             with open(passed_path, "r") as f:
@@ -376,7 +375,7 @@ if __name__ == "__main__":
         # "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "plan_merged1")
+    setattr(DataArguments, "refactored_style", "plan_merged1pad1")
     setattr(DataArguments, "final_style", None)
     setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
