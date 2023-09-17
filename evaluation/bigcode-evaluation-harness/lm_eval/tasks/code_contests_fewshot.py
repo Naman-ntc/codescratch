@@ -61,6 +61,7 @@ class FewShotCodeContests(Task):
     """
 
     DATASET_PATH = "deepmind/code_contests"
+    SPLITS = ["test", "valid"]
 
     def __init__(self, level, style):
         self.level = level
