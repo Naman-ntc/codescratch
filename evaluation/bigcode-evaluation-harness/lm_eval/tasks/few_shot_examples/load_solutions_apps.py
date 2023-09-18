@@ -8,14 +8,13 @@ question1 = (
     "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_2/question/question.txt"
 )
 
-base2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/base/base/original/solution.py"
-rename2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/rename/EPC_RV2/original/solution.py"
-remod2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/remodularize/EPC_RMFN/remod_merged/solution.py"
-plan2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/all_solutions/7/planning/EPC_LPFN/plans_merged/attempt_0.py"
+base2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_285/all_solutions/11/base/base/original/solution.py"
+rename2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_285/all_solutions/11/rename/EPC_RV2/original/solution.py"
+remod2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_285/all_solutions/11/remodularize/EPC_RMFN/remod_merged/solution.py"
+plan2 = "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_285/all_solutions/11/planning/EPC_LPFN/plans_merged/attempt_0.py"
 question2 = (
-    "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_395/question/question.txt"
+    "/home/naman/Repos/CodeQuality/apps_enumerated_old/row_285/question/question.txt"
 )
-
 all_vars = [
     "base1",
     "rename1",
