@@ -107,7 +107,7 @@ def main():
     )
 
     # Load the dataset
-    if data_args.oai_mode:
+    if data_args.oai_mode or data_args.oai_mode2:
         train_dataset, eval_dataset = build_oai_datasets(tokenizer, data_args)
     else:
         train_dataset, eval_dataset = build_refactored_datasets(tokenizer, data_args)

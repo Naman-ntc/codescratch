@@ -29,8 +29,14 @@ except:
 # borrowed and modified from https://github.com/bigcode-project/bigcode-evaluation-harness/blob/main/finetuning/APPS/apps_dataset.py
 
 
-def load_all_oai_question_solutions(refactored_base_path):
-    globbed_passed_path = f"{refactored_base_path}/*/openai_solutions/*_passed.json"
+def load_all_oai_question_solutions(refactored_base_path: str, oai_mode2: bool):
+    if oai_mode2:
+        globbed_passed_path = f"{refactored_base_path}/*/openai_solutions/*_passed.json"
+    else:
+        globbed_passed_path = (
+            f"{refactored_base_path}/*/openai_solutions2/*_passed.json"
+        )
+
     globbed_passed_path = sorted(glob.glob(globbed_passed_path))
 
     question_solutions = defaultdict(list)
@@ -108,7 +114,7 @@ def convert_to_remod(question_solutions: dict[str, list[str]]):
 def build_oai_datasets(tokenizer, data_args):
     assert data_args.refactored_style in ["base_original", "remodularize_merged"]
     question_solutions: dict[str, list[str]] = load_all_oai_question_solutions(
-        data_args.refactored_base_path,
+        data_args.refactored_base_path, data_args.oai_mode2
     )
 
     if data_args.refactored_style == "remodularize_merged":
@@ -274,8 +280,9 @@ if __name__ == "__main__":
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "base_original")
     setattr(DataArguments, "refactored_style", "remodularize_merged")
+    setattr(DataArguments, "refactored_style", "remodularize_merged")
+    setattr(DataArguments, "oai_mode2", True)
     # setattr(DataArguments, "max_total_samples", 100)
 
     tokenizer = AutoTokenizer.from_pretrained(

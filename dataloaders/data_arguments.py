@@ -15,6 +15,11 @@ class DataArguments:
         metadata={"help": "Whether to use the OpenAI Distilled dataset"},
     )
 
+    oai_mode2: bool = field(
+        default=False,
+        metadata={"help": "Whether to use the OpenAI Distilled v2 dataset"},
+    )
+
     max_total_samples: Optional[int] = field(
         default=None,
         metadata={
