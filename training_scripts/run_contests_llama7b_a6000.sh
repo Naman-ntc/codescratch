@@ -22,7 +22,6 @@ final_style=${dictionary[$short_final_style]}
 
 deepspeed code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
-    --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
     --refactored_base_path /root/codescratch/code_contests_enumerated_train/ \
     --refactored_style $refactored_style \
     --final_style $final_style \

@@ -19,7 +19,6 @@ fi
 
 deepspeed code_trainer.py \
     --model_name_or_path codellama/CodeLlama-7b-hf \
-    --model_revision 533ac5fc570d52216e713201835b7a3a2af990eb \
     --refactored_base_path /root/codescratch/apps_enumerated_old/ \
     --oai_mode \
     --refactored_style $refactored_style \
