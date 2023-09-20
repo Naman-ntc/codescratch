@@ -15,6 +15,7 @@ from transformers import AutoTokenizer
 from dataloaders.enumerated_file_utils import (
     DATA_KEYS,
     PLAN_PAD_DATA_KEYS,
+    PLAN_MASK_DATA_KEYS,
     TRANSLATION_KEYS,
     get_question_path,
     get_passed_path,
@@ -145,6 +146,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
 
         self._initialize()
         self._initialize_plan_pad()
+        self._initialize_mask_plan()
 
     @staticmethod
     def read_file(path):
@@ -193,9 +195,9 @@ class RefactoredDataset(torch.utils.data.Dataset):
             "solution": [],
             "total": [],
         }
+        answer_type = "\nUse Standard Input format\n"
         for question_path, solutions in tqdm.tqdm(self.question_solutions.items()):
             question_str = RefactoredDataset.read_file(question_path)
-            answer_type = "\nUse Standard Input format\n"
 
             for solution in solutions:
                 # remove samples with long plan
@@ -209,7 +211,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
                 plan_str_tokens = self.tokenizer(plan_lines)["input_ids"]
                 plan_tokens_count = len(plan_str_tokens)
 
-                if len(plan_str_tokens) > 450:
+                if plan_tokens_count > 450:
                     skip_count += 1
                     continue
 
@@ -333,6 +335,94 @@ class RefactoredDataset(torch.utils.data.Dataset):
         print(f"After merging, {len(all_plan_samples)} samples")
         self.all_samples.extend(all_plan_samples)
 
+    def _initialize_mask_plan(self):
+        skip_count = 0
+        cutoff_count = 0
+        all_maskplan_samples: list[tuple[list[str], bool]] = []
+        all_token_lengths = {
+            "question": [],
+            "plan": [],
+            "solution": [],
+            "total": [],
+        }
+        if self.refactored_style not in PLAN_MASK_DATA_KEYS:
+            return
+        all_plan_attempt_files = glob.glob(
+            self.refactored_base_path
+            + "/*/"
+            + PLAN_MASK_DATA_KEYS[self.refactored_style]
+        )
+        answer_type = "\nUse Standard Input format\n"
+        for plan_attempt_file in tqdm.tqdm(all_plan_attempt_files):
+            question_path = get_question_path(plan_attempt_file)
+            if question_path not in self.question_solutions:
+                continue
+
+            question_str = RefactoredDataset.read_file(question_path)
+            solution_str = RefactoredDataset.read_file(plan_attempt_file)
+
+            # remove samples with long plan
+            solution_lines = solution_str.split("\n")
+            code_line_index = ["# CODE" in line for line in solution_lines]
+            assert (
+                sum(code_line_index) == 1
+            ), f"Multiple code lines in {plan_attempt_file}"
+            code_line_index = code_line_index.index(True)
+
+            plan_str = "\n".join(solution_lines[:code_line_index])
+            plan_str_tokens = self.tokenizer(plan_str)["input_ids"]
+
+            plan_tokens_count = len(plan_str_tokens)
+
+            if plan_tokens_count > 450:
+                skip_count += 1
+                continue
+
+            # remove samples with long questions
+            q_str = f"QUESTION:\n{question_str}\n{answer_type}\nANSWER:\n\n"
+            q_str_tokens = self.tokenizer(q_str)["input_ids"]
+
+            q_tokens_count = len(q_str_tokens)
+
+            if q_tokens_count > self.max_tokens:
+                skip_count += 1
+                continue
+
+            code_str = "\n".join(solution_lines[code_line_index:])
+            code_str_tokens = self.tokenizer(code_str)["input_ids"] + [
+                self.tokenizer.eos_token_id
+            ]
+
+            code_tokens_count = len(code_str_tokens)
+
+            total_tokens_count = q_tokens_count + plan_tokens_count + code_tokens_count
+
+            if total_tokens_count > self.max_tokens:
+                cutoff_count += 1
+
+            sample = [
+                (q_str_tokens, 1),
+                (plan_str_tokens, 0),
+                (code_str_tokens, 1),
+            ]
+            all_token_lengths["question"].append(q_tokens_count)
+            all_token_lengths["plan"].append(plan_tokens_count)
+            all_token_lengths["solution"].append(code_tokens_count)
+            all_token_lengths["total"].append(total_tokens_count)
+            all_maskplan_samples.append(sample)
+
+        print(f"Loaded {len(all_maskplan_samples)} samples")
+        print(f"Skipped {skip_count} samples")
+        print(f"Solution cutoff in {cutoff_count} samples")
+        avg_token_lengths = {k: np.mean(v) for k, v in all_token_lengths.items()}
+        print(f"Average token lengths: {avg_token_lengths}")
+        stdev_token_lengths = {k: np.std(v) for k, v in all_token_lengths.items()}
+        print(f"Stdev token lengths: {stdev_token_lengths}")
+        max_token_lengths = {k: np.max(v) for k, v in all_token_lengths.items()}
+        print(f"Max token lengths: {max_token_lengths}")
+
+        self.all_samples.extend(all_maskplan_samples)
+
     def pack_samples(self, idx):
         input_ids = []
         label_ids = []
@@ -377,10 +467,10 @@ if __name__ == "__main__":
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "remodularize_merged")
+    setattr(DataArguments, "refactored_style", "plan_merged2maskall")
     setattr(DataArguments, "final_style", "remodularize_merged")
     setattr(DataArguments, "filter_on_passed", False)
-    setattr(DataArguments, "max_total_samples", 100)
+    # setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
 
     tokenizer = AutoTokenizer.from_pretrained(
@@ -389,20 +479,14 @@ if __name__ == "__main__":
         trust_remote_code=True,
     )
 
-    print(
-        tokenizer.convert_ids_to_tokens(
-            tokenizer("hello world")["input_ids"] + [tokenizer.eos_token_id]
-        )
-    )
-
     dataset, _ = build_refactored_datasets(tokenizer, DataArguments)
 
     print(len(dataset))
-    print(dataset[0])
+    # print(dataset[0])
 
-    print(tokenizer.convert_ids_to_tokens(dataset[0]["input_ids"]))
-    print(
-        tokenizer.convert_ids_to_tokens(
-            [tokenizer.eos_token_id if x == -100 else x for x in dataset[0]["labels"]]
-        )
-    )
+    # print(tokenizer.convert_ids_to_tokens(dataset[0]["input_ids"]))
+    # print(
+    #     tokenizer.convert_ids_to_tokens(
+    #         [tokenizer.eos_token_id if x == -100 else x for x in dataset[0]["labels"]]
+    #     )
+    # )
