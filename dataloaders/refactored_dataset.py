@@ -48,7 +48,7 @@ def load_all_question_solutions(
     refactored_base_path, filter_not_passed, refactored_style, translation_style
 ):
     globbed_solution_path = f"{refactored_base_path}/*/{DATA_KEYS[refactored_style]}"
-    globbed_solution_path = glob.glob(globbed_solution_path)
+    globbed_solution_path = sorted(glob.glob(globbed_solution_path))
     assert len(globbed_solution_path) > 0, f"no files found at {globbed_solution_path}"
     question_solutions = defaultdict(list)
 
@@ -73,7 +73,7 @@ def load_all_question_solutions(
             if not os.path.exists(translated_solution_path):
                 continue
 
-        solution = read_solution_with_smallest_plan(solution_path)
+        solution = RefactoredDataset.read_file(solution_path)
 
         question_path = get_question_path(solution_path)
         question_solutions[question_path].append(solution)
@@ -104,6 +104,7 @@ def split_dict(question_solutions: dict[str, list[str]], split_fraction: float):
 
 
 def build_refactored_datasets(tokenizer, data_args):
+    random.seed(data_args.seed)
     question_solutions: dict[str, list[str]] = load_all_question_solutions(
         data_args.refactored_base_path,
         data_args.filter_on_passed,
@@ -152,6 +153,7 @@ class RefactoredDataset(torch.utils.data.Dataset):
 
     @staticmethod
     def read_small_plan_code(path):
+        return RefactoredDataset.read_file(path)
         paths = [
             os.path.join(os.path.dirname(path), "attempt_0.py"),
             os.path.join(os.path.dirname(path), "attempt_1.py"),
@@ -372,11 +374,12 @@ if __name__ == "__main__":
     setattr(
         DataArguments,
         "refactored_base_path",
-        # "/home/naman/Repos/CodeQuality/apps_enumerated_old",
-        "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
+        "/home/naman/Repos/CodeQuality/apps_enumerated_old",
+        # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "plan_merged1pad1")
-    setattr(DataArguments, "final_style", None)
+    setattr(DataArguments, "refactored_style", "remodularize_merged")
+    setattr(DataArguments, "final_style", "remodularize_merged")
+    setattr(DataArguments, "filter_on_passed", False)
     setattr(DataArguments, "max_total_samples", 100)
     # setattr(DataArguments, "final_style", "modularize_original")
 

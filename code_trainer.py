@@ -17,7 +17,7 @@ from transformers import (
     set_seed,
 )
 
-from dataloaders import DataArguments, build_refactored_datasets
+from dataloaders import DataArguments, build_refactored_datasets, build_oai_datasets
 from model_arguments import ModelArguments, ModelSpecificArguments
 from utils.monkey_patches import replace_attn_with_xformer, replace_attn_with_flash_attn
 
@@ -29,8 +29,7 @@ def safe_save_model_for_hf_trainer(trainer: transformers.Trainer, output_dir: st
     """Collects the state dict and dump to disk."""
     state_dict = trainer.model.state_dict()
     if trainer.args.should_save:
-        cpu_state_dict = {key: value.cpu()
-                          for key, value in state_dict.items()}
+        cpu_state_dict = {key: value.cpu() for key, value in state_dict.items()}
         del state_dict
         trainer._save(output_dir, state_dict=cpu_state_dict)  # noqa
 
@@ -61,10 +60,10 @@ def setup_logging(training_args: TrainingArguments):
 
 
 def setup_monkey_patches():
-    if any(arg in sys.argv for arg in ['--use_flash_attn']):
+    if any(arg in sys.argv for arg in ["--use_flash_attn"]):
         print(f"Using flash attention")
         replace_attn_with_flash_attn()
-    if any(arg in sys.argv for arg in ['--use_xformer_attn']):
+    if any(arg in sys.argv for arg in ["--use_xformer_attn"]):
         print(f"Using xformer mem-efficient attention")
         replace_attn_with_xformer()
     return
@@ -77,12 +76,17 @@ def main():
         ModelArguments,
         ModelSpecificArguments,
         DataArguments,
-        TrainingArguments
+        TrainingArguments,
     )
 
     parser = HfArgumentParser(all_argument_classes)
 
-    model_args, model_specific_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    (
+        model_args,
+        model_specific_args,
+        data_args,
+        training_args,
+    ) = parser.parse_args_into_dataclasses()
 
     setup_logging(training_args)
     # Set seed before initializing model.
@@ -96,14 +100,17 @@ def main():
         "use_fast": True,
         "revision": model_args.model_revision,
         "use_auth_token": True if model_args.use_auth_token else None,
-        "trust_remote_code": True
+        "trust_remote_code": True,
     }
     tokenizer = AutoTokenizer.from_pretrained(
-        model_args.model_name_or_path, **tokenizer_kwargs)
+        model_args.model_name_or_path, **tokenizer_kwargs
+    )
 
     # Load the dataset
-    train_dataset, eval_dataset = build_refactored_datasets(
-        tokenizer, data_args)
+    if data_args.oai_mode:
+        train_dataset, eval_dataset = build_oai_datasets(tokenizer, data_args)
+    else:
+        train_dataset, eval_dataset = build_refactored_datasets(tokenizer, data_args)
 
     # Load the model
     config_kwargs = {
@@ -111,18 +118,17 @@ def main():
         "cache_dir": model_args.cache_dir,
         "revision": model_args.model_revision,
         "use_auth_token": True if model_args.use_auth_token else None,
-        "trust_remote_code": True
+        "trust_remote_code": True,
     }
 
-    config = AutoConfig.from_pretrained(
-        model_args.model_name_or_path,
-        **config_kwargs
-    )
-    if config.architectures[0] == 'MPTForCausalLM':
-        config.attn_config['attn_impl'] = model_specific_args.attn_impl
-        config.attn_config['alibi'] = model_specific_args.alibi
+    config = AutoConfig.from_pretrained(model_args.model_name_or_path, **config_kwargs)
+    if config.architectures[0] == "MPTForCausalLM":
+        config.attn_config["attn_impl"] = model_specific_args.attn_impl
+        config.attn_config["alibi"] = model_specific_args.alibi
     if config.architectures[0] == "GPTBigCodeForCausalLM":
-        config.scale_attention_softmax_in_fp32 = model_specific_args.scale_attention_softmax_in_fp32
+        config.scale_attention_softmax_in_fp32 = (
+            model_specific_args.scale_attention_softmax_in_fp32
+        )
         config.attention_softmax_in_fp32 = model_specific_args.attention_softmax_in_fp32
 
     torch_dtype = (
@@ -170,7 +176,7 @@ def main():
         # Data collator will default to DataCollatorWithPadding, so we change it.
         data_collator=default_data_collator,
         compute_metrics=compute_metrics,
-        preprocess_logits_for_metrics=preprocess_logits_for_metrics
+        preprocess_logits_for_metrics=preprocess_logits_for_metrics,
     )
 
     # Training
@@ -180,8 +186,7 @@ def main():
         trainer.train()
 
     safe_save_model_for_hf_trainer(
-        trainer=trainer,
-        output_dir=training_args.output_dir + "/final_model"
+        trainer=trainer, output_dir=training_args.output_dir + "/final_model"
     )
 
 

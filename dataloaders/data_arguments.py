@@ -10,6 +10,11 @@ class DataArguments:
     Arguments pertaining to what data we are going to input our model for training and eval.
     """
 
+    oai_mode: bool = field(
+        default=False,
+        metadata={"help": "Whether to use the OpenAI Distilled dataset"},
+    )
+
     max_total_samples: Optional[int] = field(
         default=None,
         metadata={

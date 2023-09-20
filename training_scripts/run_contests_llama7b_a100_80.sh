@@ -29,7 +29,7 @@ deepspeed code_trainer.py \
     --use_xformer_attn True \
     --bf16 True \
     --tf32 True \
-    --output_dir "checkpoints_codellama_7b_contests_${short_refactored_style}_${short_final_style}_2e5_256_1" \
+    --output_dir "checkpoints_codellama_7b_contests_${short_refactored_style}_${short_final_style}_5e5_256_1" \
     --num_train_epochs 1 \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 8 \
@@ -40,14 +40,14 @@ deepspeed code_trainer.py \
     --save_total_limit 10 \
     --evaluation_strategy "steps" \
     --eval_steps 25 \
-    --learning_rate 2e-5 \
+    --learning_rate 5e-5 \
     --weight_decay 0 \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
     --logging_steps 5 \
     --block_size 2048 \
     --report_to wandb \
-    --run_name "codellama_7b_contests_${short_refactored_style}_${short_final_style}_2e5_256_1" \
+    --run_name "codellama_7b_contests_${short_refactored_style}_${short_final_style}_5e5_256_1" \
     --do_train \
     --do_eval \
     --deepspeed utils/ds_config.json \
