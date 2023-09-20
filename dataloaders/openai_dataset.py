@@ -31,11 +31,11 @@ except:
 
 def load_all_oai_question_solutions(refactored_base_path: str, oai_mode2: bool):
     if oai_mode2:
-        globbed_passed_path = f"{refactored_base_path}/*/openai_solutions/*_passed.json"
-    else:
         globbed_passed_path = (
             f"{refactored_base_path}/*/openai_solutions2/*_passed.json"
         )
+    else:
+        globbed_passed_path = f"{refactored_base_path}/*/openai_solutions/*_passed.json"
 
     globbed_passed_path = sorted(glob.glob(globbed_passed_path))
 
@@ -280,7 +280,7 @@ if __name__ == "__main__":
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "remodularize_merged")
+    setattr(DataArguments, "refactored_style", "base_original")
     setattr(DataArguments, "refactored_style", "remodularize_merged")
     setattr(DataArguments, "oai_mode2", True)
     # setattr(DataArguments, "max_total_samples", 100)
