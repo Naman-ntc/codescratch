@@ -7,6 +7,7 @@ It can be used to evaluate the ability of language models to generate code from 
 Homepage: https://github.com/hendrycks/apps
 """
 
+import os
 import json
 
 import numpy as np
@@ -56,7 +57,10 @@ class GeneralCodeContests(Task):
     answers, generation settings and evaluation methods.
     """
 
-    DATASET_PATH = "deepmind/code_contests"
+    if os.path.exists("../hf_data/datasets--deepmind--code_contests/"):
+        DATASET_PATH = "../hf_data/datasets--deepmind--code_contests/"
+    else:
+        DATASET_PATH = "deepmind/code_contests"
     SPLITS = ["test", "valid"]
 
     def __init__(self, level):

@@ -7,6 +7,7 @@ It can be used to evaluate the ability of language models to generate code from 
 Homepage: https://github.com/hendrycks/apps
 """
 
+import os
 import json
 
 import numpy as np
@@ -62,7 +63,10 @@ class GeneralAPPS(Task):
     answers, generation settings and evaluation methods.
     """
 
-    DATASET_PATH = "codeparrot/apps"
+    if os.path.exists("../hf_data/datasets--codeparrot--apps/"):
+        DATASET_PATH = "../hf_data/datasets--codeparrot--apps/"
+    else:
+        DATASET_PATH = "codeparrot/apps"
     DATASET_NAME = None
     SPLITS = ["test"]
 
@@ -77,6 +81,11 @@ class GeneralAPPS(Task):
 
     def filter_by_platform(self):
         self.dataset = self.dataset["test"]
+        indices = np.where(
+            (self.dataset.to_pandas()["difficulty"] == self.DATASET_NAME).values
+        )[0]
+        self.dataset = self.dataset.select(indices)
+
         platforms = pd.Series(self.dataset["url"]).str.split(".")
         platforms0 = platforms.str[0].str.split("/").str[-1]
         platforms0[platforms0.isin(["open", "www"])] = platforms[
