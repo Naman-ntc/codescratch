@@ -50,7 +50,7 @@ deepspeed code_trainer.py \
     --bf16 True \
     --tf32 True \
     --filter_on_passed False \
-    --output_dir "checkpoints_codellama_7b_apps_${short_refactored_style}_${short_final_style}_${lr}_256_${num_epochs}" \
+    --output_dir "checkpoints_codellama_13b_apps_${short_refactored_style}_${short_final_style}_${lr}_256_${num_epochs}" \
     --num_train_epochs 2 \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 32 \

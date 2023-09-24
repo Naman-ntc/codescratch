@@ -42,7 +42,7 @@ deepspeed code_trainer.py \
     --use_xformer_attn True \
     --bf16 True \
     --tf32 True \
-    --output_dir "checkpoints_codellama_7b_contests_${short_refactored_style}_${short_final_style}_${lr}_256_1" \
+    --output_dir "checkpoints_codellama_13b_contests_${short_refactored_style}_${short_final_style}_${lr}_256_1" \
     --num_train_epochs 1 \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 32 \
