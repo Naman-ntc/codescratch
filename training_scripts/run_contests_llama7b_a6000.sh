@@ -11,6 +11,10 @@ dictionary=(
     ['planm2padall']='plan_merged2padall'
     ['planm1pad2']='plan_merged1pad2'
     ['planm2pad2']='plan_merged2pad2'
+    ['planm1maskall']='plan_merged1maskall'
+    ['planm2maskall']='plan_merged2maskall'
+    ['planm1mask2']='plan_merged1mask2'
+    ['planm2mask2']='plan_merged2mask2'
 )
 
 short_refactored_style=$1
@@ -51,4 +55,4 @@ deepspeed code_trainer.py \
     --do_train \
     --do_eval \
     --deepspeed utils/ds_config.json \
-    # --final_style modularize_original \
+    --deepspeed utils/ds_config_cpu.json \
