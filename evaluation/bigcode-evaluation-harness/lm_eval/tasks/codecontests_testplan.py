@@ -177,17 +177,17 @@ if __name__ == "__main__":
     task = GeneralCodeContestsTestPlan()
     print(task)
     dataset = task.get_dataset()
-    sample = dataset[0]
+    sample = dataset[10]
     p1 = task.get_prompt(sample)
     print(p1)
 
-    sample = dataset[1]
-    p1 = task.get_prompt(sample)
-    print(p1)
+    # sample = dataset[1]
+    # p1 = task.get_prompt(sample)
+    # print(p1)
 
-    sample = dataset[28]
-    p1 = task.get_prompt(sample)
-    print(p1)
+    # sample = dataset[28]
+    # p1 = task.get_prompt(sample)
+    # print(p1)
 
     public = sample["public_tests"]
     private = sample["private_tests"]
