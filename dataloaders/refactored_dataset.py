@@ -464,10 +464,10 @@ if __name__ == "__main__":
     setattr(
         DataArguments,
         "refactored_base_path",
-        "/home/naman/Repos/CodeQuality/apps_enumerated_old",
-        # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
+        # "/home/naman/Repos/CodeQuality/apps_enumerated_old",
+        "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "plan_merged2maskall")
+    setattr(DataArguments, "refactored_style", "plan_merged1maskall")
     setattr(DataArguments, "final_style", "remodularize_merged")
     setattr(DataArguments, "filter_on_passed", False)
     # setattr(DataArguments, "max_total_samples", 100)

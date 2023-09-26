@@ -110,7 +110,7 @@ class GeneralCodeContestsTestPlan(Task):
         answer_type = "\nUse Standard Input format\n"
         q_str = f"QUESTION:\n{question_str}\n{answer_type}\nANSWER:\n\n"
         if select_plan:
-            q_str = q_str + select_plan + "\n"
+            q_str = q_str + "# PLAN\n" + select_plan + "\n\n# CODE\n" + "\n"
         # prompt = "\nQUESTION:\n" + question_str + "\n" + answer_type + "\nANSWER:\n"
         prompt = q_str
         return prompt
