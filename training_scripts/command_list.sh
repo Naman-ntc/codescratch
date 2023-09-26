@@ -65,13 +65,13 @@ bash training_scripts/run_apps_llama7b_a100_80.sh rename remod 2
 bash training_scripts/run_apps_llama7b_a100_80.sh mod remod 2
 
 # ablation - data size
-bash training_scripts/run_apps_datasize_a100_80.sh remod remod 100
-bash training_scripts/run_apps_datasize_a100_80.sh remod remod 200
-bash training_scripts/run_apps_datasize_a100_80.sh remod remod 400
-bash training_scripts/run_apps_datasize_a100_80.sh remod remod 800
-bash training_scripts/run_apps_datasize_a100_80.sh remod remod 1600
-bash training_scripts/run_apps_datasize_a100_80.sh base remod 100
-bash training_scripts/run_apps_datasize_a100_80.sh base remod 200
-bash training_scripts/run_apps_datasize_a100_80.sh base remod 400
-bash training_scripts/run_apps_datasize_a100_80.sh base remod 800
-bash training_scripts/run_apps_datasize_a100_80.sh base remod 1600
+bash training_scripts/run_apps_datasize_a100_80.sh remod remod 100 5
+bash training_scripts/run_apps_datasize_a100_80.sh remod remod 200 4
+bash training_scripts/run_apps_datasize_a100_80.sh remod remod 400 3 
+bash training_scripts/run_apps_datasize_a100_80.sh remod remod 800 2
+bash training_scripts/run_apps_datasize_a100_80.sh base remod 100 5
+bash training_scripts/run_apps_datasize_a100_80.sh base remod 200 4
+bash training_scripts/run_apps_datasize_a100_80.sh base remod 400 3
+bash training_scripts/run_apps_datasize_a100_80.sh base remod 800 2
+bash training_scripts/run_apps_datasize_a100_80.sh remod remod 1600 2
+bash training_scripts/run_apps_datasize_a100_80.sh base remod 1600 2

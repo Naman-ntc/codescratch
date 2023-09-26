@@ -18,6 +18,12 @@ dictionary=(
 short_refactored_style=$1
 short_final_style=$2
 num_samples=$3
+if [ -z "$4" ]
+then
+    num_epochs=2
+else
+    num_epochs=$4
+fi
 
 refactored_style=${dictionary[$short_refactored_style]}
 final_style=${dictionary[$short_final_style]}
@@ -33,15 +39,15 @@ deepspeed code_trainer.py \
     --bf16 True \
     --tf32 True \
     --filter_on_passed False \
-    --output_dir "checkpoints_codellama_7b_apps_${short_refactored_style}_${short_final_style}_${num_samples}_5e5_256_2" \
-    --num_train_epochs 2 \
+    --output_dir "checkpoints_codellama_7b_appssize_${short_refactored_style}_${short_final_style}_${num_samples}_5e5_256_${num_epochs}" \
+    --num_train_epochs $num_epochs \
     --gradient_checkpointing True \
     --gradient_accumulation_steps 8 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 16 \
     --save_strategy "steps" \
     --save_steps 25 \
-    --save_total_limit 10 \
+    --save_total_limit 1 \
     --evaluation_strategy "steps" \
     --eval_steps 25 \
     --learning_rate 5e-5 \
@@ -51,7 +57,7 @@ deepspeed code_trainer.py \
     --logging_steps 5 \
     --block_size 2048 \
     --report_to wandb \
-    --run_name "codellama_7b_apps_${short_refactored_style}_${short_final_style}_${num_samples}_5e5_256_2" \
+    --run_name "codellama_7b_appssize_${short_refactored_style}_${short_final_style}_${num_samples}_5e5_256_${num_epochs}" \
     --do_train \
     --do_eval \
     --deepspeed utils/ds_config.json \
