@@ -6,6 +6,7 @@ from . import (
     apps_fewshot,
     code_contests_fewshot,
     codecontests_test,
+    codecontests_testplan,
 )
 
 TASK_REGISTRY = {
@@ -14,6 +15,7 @@ TASK_REGISTRY = {
     **apps_fewshot.create_all_tasks(),
     **code_contests_fewshot.create_all_tasks(),
     **codecontests_test.create_all_tasks(),
+    **codecontests_testplan.create_all_tasks(),
 }
 
 ALL_TASKS = sorted(list(TASK_REGISTRY))

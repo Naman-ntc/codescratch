@@ -10,6 +10,7 @@ Homepage: https://github.com/hendrycks/apps
 import os
 import json
 import glob
+import random
 
 import numpy as np
 import pandas as pd
@@ -70,6 +71,9 @@ class GeneralCodeContestsTestPlan(Task):
             requires_execution=True,
         )
         self.filter_by_platform()
+        all_plans = "../gptturbo_plans.json"
+        with open(all_plans, "r") as f:
+            self.all_plans = json.load(f)
 
     def filter_by_platform(self):
         self.dataset = self.dataset["test"]
@@ -80,6 +84,26 @@ class GeneralCodeContestsTestPlan(Task):
         return self.dataset
 
     def get_prompt(self, doc):
+        """Generate prompts for APPS
+        Finetuning setup: prompt=question  with some starter code and function name if they exist.
+        We also specify the type of the prompt, i.e. whether it is call-based or standard input-based.
+        """
+        index = int(
+            self.dataset_pandas[(self.dataset_pandas.name == doc["name"])].index[0]
+        )
+        plans_per_q = self.all_plans[index]
+        select_plan = random.choice(plans_per_q)
+        select_plan = "\n".join(
+            ["# " + pline for pline in select_plan.split("\n") if pline]
+        )
+
+        question_str = doc["description"]
+        answer_type = "\nUse Standard Input format\n"
+        q_str = f"QUESTION:\n{question_str}\n{answer_type}\nANSWER:\n\n"
+        if select_plan:
+            q_str = q_str + "# PLAN\n" + select_plan + "\n\n# CODE\n" + "\n"
+
+    def get_prompt_old(self, doc):
         """Generate prompts for APPS
         Finetuning setup: prompt=question  with some starter code and function name if they exist.
         We also specify the type of the prompt, i.e. whether it is call-based or standard input-based.
