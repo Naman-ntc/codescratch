@@ -71,7 +71,7 @@ class GeneralCodeContestsTestPlan(Task):
             requires_execution=True,
         )
         self.filter_by_platform()
-        all_plans = "../../gptturbo_plans.json"
+        all_plans = "../gptturbo_plans.json"
         with open(all_plans, "r") as f:
             self.all_plans = json.load(f)
 
