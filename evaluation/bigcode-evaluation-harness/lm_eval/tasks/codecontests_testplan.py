@@ -71,7 +71,7 @@ class GeneralCodeContestsTestPlan(Task):
             requires_execution=True,
         )
         self.filter_by_platform()
-        all_plans = "../gptturbo_plans.json"
+        all_plans = "../../gptturbo_plans.json"
         with open(all_plans, "r") as f:
             self.all_plans = json.load(f)
 
@@ -102,6 +102,8 @@ class GeneralCodeContestsTestPlan(Task):
         q_str = f"QUESTION:\n{question_str}\n{answer_type}\nANSWER:\n\n"
         if select_plan:
             q_str = q_str + "# PLAN\n" + select_plan + "\n\n# CODE\n" + "\n"
+        prompt = q_str
+        return prompt
 
     def get_prompt_old(self, doc):
         """Generate prompts for APPS
