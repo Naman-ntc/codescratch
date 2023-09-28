@@ -19,7 +19,8 @@ else
     exit 1
 fi
 
-if [ $temperature == "0.1"]
+if [ $temperature == "0.1" ]
+then
     num_samples=15
     batch_size=15
 fi
