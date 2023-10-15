@@ -1,2 +1,0 @@
-apps.tar.gz filter=lfs diff=lfs merge=lfs -text
-code_contests.tar.gz filter=lfs diff=lfs merge=lfs -text
