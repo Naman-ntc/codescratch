@@ -247,11 +247,16 @@ class FewShotAPPS(Task):
 
 
 if __name__ == "__main__":
-    task = FewShotAPPS("introductory", "plan", ["codeforces", "codechef", "atcoder"])
+    task = FewShotAPPS("introductory", "base", ["codeforces", "codechef", "atcoder"])
     print(task)
     dataset = task.get_dataset()
-    p1 = task.get_prompt(dataset[0])
+    p1 = task.get_prompt(dataset[2])
     # p2 = task.get_prompt2(dataset[0])
     # print(p1 == p2)
     print(p1)
+    p1 = "\n\n---\n".join(p1.split("\n\n---\n")[:-1])
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    tokenizer = AutoTokenizer.from_pretrained("codellama/CodeLlama-7b-hf")
+    print(len(tokenizer(p1)["input_ids"]))
     # print(p2)
