@@ -5,6 +5,7 @@ dictionary=(
     ['rename']='rename_original'
     ['mod']='modularize_original'
     ['remod']='remodularize_merged'
+    ['remod_35']='remodularize_merged_35'
     ['planm1']='plan_merged1'
     ['planm2']='plan_merged2'
     ['planm1padall']='plan_merged1padall'

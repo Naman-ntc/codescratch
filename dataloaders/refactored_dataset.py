@@ -48,9 +48,9 @@ def read_solution_with_smallest_plan(solution_path):
 def load_all_question_solutions(
     refactored_base_path, filter_not_passed, refactored_style, translation_style
 ):
-    globbed_solution_path = f"{refactored_base_path}/*/{DATA_KEYS[refactored_style]}"
-    globbed_solution_path = sorted(glob.glob(globbed_solution_path))
-    assert len(globbed_solution_path) > 0, f"no files found at {globbed_solution_path}"
+    globbed_str = f"{refactored_base_path}/*/{DATA_KEYS[refactored_style]}"
+    globbed_solution_path = sorted(glob.glob(globbed_str))
+    assert len(globbed_solution_path) > 0, f"no files found at {globbed_str}"
     question_solutions = defaultdict(list)
 
     do_translation = (
@@ -68,10 +68,15 @@ def load_all_question_solutions(
                 continue
 
         if do_translation:
-            translated_solution_path = translate_solution_path(
+            translated_solution_paths = translate_solution_path(
                 solution_path, refactored_style, translation_style
             )
-            if not os.path.exists(translated_solution_path):
+            skip = False
+            for translated_solution_path in translated_solution_paths:
+                if not os.path.exists(translated_solution_path):
+                    skip = True
+                    break
+            if skip:
                 continue
 
         solution = RefactoredDataset.read_file(solution_path)
@@ -202,11 +207,12 @@ class RefactoredDataset(torch.utils.data.Dataset):
             for solution in solutions:
                 # remove samples with long plan
                 plan_lines = ""
-                for solution_line in solution.split("\n"):
-                    if solution_line.startswith("# "):
-                        plan_lines += solution_line + "\n"
-                    else:
-                        break
+                if "plan" in self.refactored_style:
+                    for solution_line in solution.split("\n"):
+                        if solution_line.startswith("# "):
+                            plan_lines += solution_line + "\n"
+                        else:
+                            break
 
                 plan_str_tokens = self.tokenizer(plan_lines)["input_ids"]
                 plan_tokens_count = len(plan_str_tokens)
@@ -467,10 +473,10 @@ if __name__ == "__main__":
         "/home/naman/Repos/CodeQuality/apps_enumerated_old",
         # "/home/naman/Repos/CodeQuality/code_contests_enumerated_train",
     )
-    setattr(DataArguments, "refactored_style", "remodularize_merged")
+    setattr(DataArguments, "refactored_style", "remodularize_merged_35")
     setattr(DataArguments, "final_style", "remodularize_merged")
     setattr(DataArguments, "filter_on_passed", False)
-    setattr(DataArguments, "max_total_samples", 800)
+    # setattr(DataArguments, "max_total_samples", 800)
     # setattr(DataArguments, "final_style", "modularize_original")
 
     tokenizer = AutoTokenizer.from_pretrained(
